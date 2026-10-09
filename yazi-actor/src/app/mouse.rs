@@ -11,8 +11,8 @@ use yazi_core::{Ctx, notify::{MessageLevel, MessageOpt}, tab::PreviewSelection};
 use yazi_macro::{log_if_err, render, succ};
 use yazi_parser::app::MouseForm;
 use yazi_plugin::LUA;
-use yazi_proxy::NotifyProxy;
-use yazi_shared::{Layer, data::Data};
+use yazi_proxy::{MgrProxy, NotifyProxy};
+use yazi_shared::{Layer, data::Data, url::UrlLike};
 use yazi_term::event::{MouseButton, MouseEvent, MouseEventKind};
 use yazi_widgets::{CLIPBOARD, Renderable};
 
@@ -42,6 +42,12 @@ impl Actor for Mouse {
 		// Selecting text in the preview pane is handled before Lua, and only in the manager layer
 		let mut replay = false;
 		if cx.layer() == Layer::Mgr {
+			// The renderer chip wins over selection, so clicking it never starts a drag
+			if Self::badge(cx, form.event) {
+				render!();
+				succ!();
+			}
+
 			match Self::select(cx, form.event) {
 				Intercept::Forward => {}
 				Intercept::Handled(draw) => {
@@ -81,6 +87,35 @@ impl Actor for Mouse {
 }
 
 impl Mouse {
+	/// Clicking the renderer chip at the top-right of a Markdown preview switches between the
+	/// readable and the source rendering, and remembers the choice.
+	fn badge(cx: &mut Ctx, event: MouseEvent) -> bool {
+		if !matches!(event.kind, MouseEventKind::Down(MouseButton::Left)) {
+			return false;
+		}
+
+		let Some(rect) = Self::text_area(cx) else {
+			return false;
+		};
+		if !yazi_markdown::badge_hit(rect, event.column(), event.row()) {
+			return false;
+		}
+
+		// Only a Markdown preview has two renderings to switch between
+		let Some(lock) = cx.active().preview.lock.as_ref() else {
+			return false;
+		};
+		let mime = cx.mgr.mimetype.owned(&lock.url).unwrap_or_default();
+		let ext = lock.url.ext().map(|e| e.to_string_lossy().into_owned());
+		if !yazi_markdown::is_markdown(&mime, ext.as_deref()) {
+			return false;
+		}
+
+		yazi_markdown::toggle();
+		MgrProxy::peek(true);
+		true
+	}
+
 	/// The screen rect of the preview, when it is showing a text preview
 	fn text_area(cx: &Ctx) -> Option<Rect> {
 		let lock = cx.active().preview.lock.as_ref()?;

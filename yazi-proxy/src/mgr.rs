@@ -32,6 +32,10 @@ impl MgrProxy {
 		emit!(Call(relay!(mgr:open_do).with_any("opt", opt)));
 	}
 
+	pub fn peek(force: bool) {
+		emit!(Call(relay!(mgr:peek).with("force", force)));
+	}
+
 	pub fn remove_do(permanently: bool, targets: impl Into<Vec<UrlBuf>>) {
 		emit!(Call(
 			relay!(mgr:remove_do).with("permanently", permanently).with_any("targets", targets.into())
