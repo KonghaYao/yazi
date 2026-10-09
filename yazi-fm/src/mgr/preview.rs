@@ -1,7 +1,8 @@
-use ratatui_core::{buffer::Buffer, widgets::Widget};
+use ratatui_core::{buffer::Buffer, style::Modifier, widgets::Widget};
 use yazi_binding::elements::Spatial;
 use yazi_config::LAYOUT;
 use yazi_core::Core;
+use yazi_widgets::Renderable;
 
 pub(crate) struct Preview<'a> {
 	core: &'a Core,
@@ -26,6 +27,27 @@ impl Widget for Preview<'_> {
 			let rect = w.area().transform(|p| self.core.mgr.area(p));
 			if rect.intersection(win) == rect {
 				w.render(rect, buf);
+			}
+		}
+
+		// Highlight the selection on top of the content, keeping its syntax colors
+		let Some(selection) = &self.core.active().preview.selection else {
+			return;
+		};
+		let [Renderable::Text(text)] = &lock.data[..] else {
+			return;
+		};
+		if !selection.matches(lock) {
+			return;
+		}
+
+		let area = text.area().transform(|p| self.core.mgr.area(p));
+		for (row, from, to) in selection.ranges(text.inner()) {
+			for x in from..to {
+				let (x, y) = (area.x + x as u16, area.y + row as u16);
+				if x < area.right() && y < area.bottom() && x < win.right() && y < win.bottom() {
+					buf[(x, y)].modifier |= Modifier::REVERSED;
+				}
 			}
 		}
 	}

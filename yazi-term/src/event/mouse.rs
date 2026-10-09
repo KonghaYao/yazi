@@ -8,6 +8,12 @@ pub struct MouseEvent {
 	pub(crate) modifiers: Modifiers,
 }
 
+impl MouseEvent {
+	pub fn column(&self) -> u16 { self.column }
+
+	pub fn row(&self) -> u16 { self.row }
+}
+
 // --- Kind
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MouseEventKind {

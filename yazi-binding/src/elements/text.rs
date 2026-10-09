@@ -38,6 +38,8 @@ impl Text {
 		self
 	}
 
+	pub fn inner(&self) -> &ratatui_core::text::Text<'static> { &self.inner }
+
 	pub(crate) fn line_count(&self, width: u16) -> usize {
 		let Some(wrap) = self.wrap.0 else {
 			return self.inner.height();
