@@ -40,7 +40,7 @@ impl Signals {
 	#[cfg(unix)]
 	async fn handle(n: i32) -> bool {
 		use rustix::process::{Signal, kill_current_process_group};
-		use yazi_macro::error;
+		use yazi_macro::{debug, error};
 		use yazi_term::YIELD_TO_SUBPROCESS;
 
 		let Some(signal) = Signal::from_named_raw(n) else {
@@ -48,8 +48,9 @@ impl Signals {
 		};
 
 		match signal {
-			Signal::INT => { /* ignored */ }
+			Signal::INT => debug!("Received SIGINT, ignored"),
 			Signal::QUIT | Signal::HUP | Signal::TERM => {
+				debug!("Received {signal:?}, quitting");
 				yazi_proxy::AppProxy::quit(Default::default());
 				return false;
 			}

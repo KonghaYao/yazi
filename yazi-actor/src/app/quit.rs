@@ -6,7 +6,7 @@ use yazi_boot::ARGS;
 use yazi_core::Ctx;
 use yazi_emulator::EMULATOR;
 use yazi_fs::engine::{Engine, local::Local};
-use yazi_macro::succ;
+use yazi_macro::{debug, succ};
 use yazi_parser::app::QuitForm;
 use yazi_shared::{data::Data, strand::{StrandBuf, StrandLike, ToStrand}, url::UrlBuf};
 use yazi_tui::Raterm;
@@ -21,6 +21,8 @@ impl Actor for Quit {
 	const NAME: &str = "quit";
 
 	fn act(cx: &mut Ctx, Self::Form { opt }: Self::Form) -> Result<Data> {
+		debug!("Quitting with code {}", opt.code);
+
 		cx.tasks.shutdown();
 		cx.mgr.shutdown();
 		yazi_plugin::shutdown();
