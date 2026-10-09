@@ -196,8 +196,7 @@ function Current:redraw()
 	local left, right, codes = {}, {}, {}
 	for i = st.offset + 1, math.min(st.offset + st.height, #list) do
 		local row, entity = list[i], Row:new(list[i].file)
-		local glyph = row.file.stat.is_dir and (unfolded(st, row.file) and "▾ " or "▸ ") or "  "
-		local prefix = string.rep("  ", row.depth) .. glyph
+		local prefix = string.rep("  ", row.depth)
 
 		-- Git: the row keeps the filetype style, with the status color patched in
 		local code = Git.letter(row.file.url, row.file.stat.is_dir)
