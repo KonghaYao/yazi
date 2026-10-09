@@ -8,8 +8,14 @@ Linemode = {
 
 function Linemode:new(file) return setmetatable({ _file = file }, { __index = self }) end
 
+---@return boolean
+function Linemode:hovered() return self._file.is_hovered end
+
+---@return boolean
+function Linemode:in_current() return self._file.in_current end
+
 function Linemode:solo()
-	if not self._file.in_current then
+	if not self:in_current() then
 		return ""
 	end
 
@@ -65,7 +71,7 @@ function Linemode:owner()
 end
 
 function Linemode:padding()
-	if not self._file.is_hovered then
+	if not self:hovered() then
 		return " "
 	end
 

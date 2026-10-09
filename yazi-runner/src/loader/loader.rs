@@ -58,6 +58,7 @@ impl Default for Loader {
 			("session".to_owned(), preset!("plugins/session").into()),
 			("svg".to_owned(), preset!("plugins/svg").into()),
 			("trash".to_owned(), preset!("plugins/trash").into()),
+			("tree".to_owned(), preset!("plugins/tree").into()),
 			("vfs".to_owned(), preset!("plugins/vfs").into()),
 			("video".to_owned(), preset!("plugins/video").into()),
 			("zoxide".to_owned(), preset!("plugins/zoxide").into()),
