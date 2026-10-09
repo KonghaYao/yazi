@@ -152,6 +152,9 @@ preloaders = [
 ]
 previewers = [
 	{ mime = "folder/*", run = "folder" },
+	# Markdown
+	{ mime = "text/markdown", run = "markdown" },
+	{ url = "*.{md,markdown,mdown,mkd,mkdn,mdx}", run = "markdown" },
 	# Code
 	{ mime = "text/*", run = "code" },
 	{ mime = "application/{mbox,javascript,wine-extension-ini}", run = "code" },

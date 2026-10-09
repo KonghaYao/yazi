@@ -59,4 +59,49 @@ impl Utils {
 			Ok(())
 		})
 	}
+
+	pub(super) fn preview_markdown(lua: &Lua) -> mlua::Result<Function> {
+		lua.create_async_function(|lua, t: Table| async move {
+			let area: Area = t.raw_get("area")?;
+			let path = t.raw_get::<FileRef>("file")?.borrow(|f| Ok(f.content_path().into_owned()))?;
+
+			let mut lock = PreviewLock::try_from(t)?;
+			let size = area.size();
+			let skip = lock.skip;
+
+			let rendered = tokio::task::spawn_blocking(move || {
+				let source = std::fs::read(&path)?;
+				Ok::<_, std::io::Error>(yazi_markdown::render(
+					&String::from_utf8_lossy(&source),
+					size.width,
+					skip,
+					size.height as usize,
+				))
+			})
+			.await
+			.map_err(|e| e.into_lua_err())?
+			.map_err(|e| e.into_lua_err())?;
+
+			// Scrolling past the end has to be reported the same way `preview_code` does it
+			if skip > 0 && rendered.total < skip + size.height as usize {
+				let max = rendered.total.saturating_sub(size.height as usize);
+				return (PeekError::Exceeded(max), max).into_lua_multi(&lua);
+			}
+
+			lock.data = vec![Renderable::Text(rendered.text.into()).with_area(area)];
+
+			MgrProxy::update_peeked(lock, runtime!(lua)?.scope());
+			().into_lua_multi(&lua)
+		})
+	}
+
+	/// Which Markdown renderer the preview is using: `"readable"` or `"code"`.
+	pub(super) fn markdown_mode(lua: &Lua) -> mlua::Result<Function> {
+		lua.create_function(|_, ()| Ok(yazi_markdown::mode().as_str()))
+	}
+
+	/// Switch renderers and remember the choice; returns the new mode.
+	pub(super) fn markdown_toggle(lua: &Lua) -> mlua::Result<Function> {
+		lua.create_function(|_, ()| Ok(yazi_markdown::toggle().as_str()))
+	}
 }

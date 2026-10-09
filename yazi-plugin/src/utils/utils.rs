@@ -41,7 +41,10 @@ pub(crate) fn compose(
 			b"err" => Utils::err(lua)?,
 
 			// Preview
+			b"markdown_mode" => Utils::markdown_mode(lua)?,
+			b"markdown_toggle" => Utils::markdown_toggle(lua)?,
 			b"preview_code" => Utils::preview_code(lua)?,
+			b"preview_markdown" => Utils::preview_markdown(lua)?,
 			b"preview_widget" => Utils::preview_widget(lua)?,
 
 			// Process

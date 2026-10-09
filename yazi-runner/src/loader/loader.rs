@@ -44,6 +44,7 @@ impl Default for Loader {
 			("init".to_owned(), preset!("plugins/init").into()),
 			("json".to_owned(), preset!("plugins/json").into()),
 			("magick".to_owned(), preset!("plugins/magick").into()),
+			("markdown".to_owned(), preset!("plugins/markdown").into()),
 			("mime".to_owned(), preset!("plugins/mime").into()),
 			("mime.dir".to_owned(), preset!("plugins/mime-dir").into()),
 			("mime.local".to_owned(), preset!("plugins/mime-local").into()),
