@@ -50,6 +50,7 @@ fn stage_1(lua: &Lua) -> Result<()> {
 	lua.load(preset!("components/current")).set_name("current.lua").exec()?;
 	lua.load(preset!("components/dnd")).set_name("dnd.lua").exec()?;
 	lua.load(preset!("components/entity")).set_name("entity.lua").exec()?;
+	lua.load(preset!("components/git")).set_name("git.lua").exec()?;
 	lua.load(preset!("components/header")).set_name("header.lua").exec()?;
 	lua.load(preset!("components/linemode")).set_name("linemode.lua").exec()?;
 	lua.load(preset!("components/marker")).set_name("marker.lua").exec()?;

@@ -1017,3 +1017,13 @@ conds = [
 ]
 
 # : }}}
+
+# Git
+[git]
+untracked = { fg = "lightgreen" }
+added     = { fg = "lightgreen" }
+modified  = { fg = "lightyellow" }
+deleted   = { fg = "lightred" }
+renamed   = { fg = "lightblue" }
+copied    = { fg = "lightblue" }
+conflict  = { fg = "lightred" }
