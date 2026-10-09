@@ -224,6 +224,20 @@ hovered = { fg = "magenta", bold = true }
 # : }}}
 
 
+# : Markdown preview {{{
+
+[markdown]
+heading = { fg = "cyan", bold = true }
+code    = { fg = "yellow" }
+quote   = { fg = "green" }
+list    = { fg = "cyan" }
+link    = { fg = "blue", underline = true }
+rule    = { fg = "darkgray" }
+badge   = { fg = "black", bg = "cyan", bold = true }
+
+# : }}}
+
+
 # : Help menu {{{
 
 [help]

@@ -2905,6 +2905,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "pulldown-cmark"
+version = "0.13.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e9f068eba8e7071c5f9511831b44f32c740d5adf574e990f946ddb53db2f314e"
+dependencies = [
+ "bitflags 2.13.2",
+ "memchr",
+ "unicase",
+]
+
+[[package]]
 name = "pulp"
 version = "0.22.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5456,6 +5467,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "yazi-markdown"
+version = "26.9.1"
+dependencies = [
+ "log",
+ "pulldown-cmark",
+ "ratatui-core",
+ "syntect",
+ "unicode-width",
+ "yazi-config",
+ "yazi-fs",
+ "yazi-macro",
+ "yazi-prebuilt",
+]
+
+[[package]]
 name = "yazi-packing"
 version = "26.9.1"
 
@@ -5519,6 +5545,7 @@ dependencies = [
  "yazi-emulator",
  "yazi-fs",
  "yazi-macro",
+ "yazi-markdown",
  "yazi-proxy",
  "yazi-runner",
  "yazi-scheduler",

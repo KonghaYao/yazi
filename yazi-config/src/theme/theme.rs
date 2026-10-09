@@ -29,6 +29,7 @@ pub struct Theme {
 	pub cmp:       Cmp,
 	pub tasks:     Tasks,
 	pub help:      Help,
+	pub markdown:  Markdown,
 
 	// File-specific styles
 	pub filetype: Filetype,
@@ -260,6 +261,18 @@ pub struct Tasks {
 	pub border:  SyncCell<Style>,
 	pub title:   SyncCell<Style>,
 	pub hovered: SyncCell<Style>,
+}
+
+// --- Markdown
+#[derive(Deserialize, DeserializeOver, DeserializeOver2, Overlay)]
+pub struct Markdown {
+	pub heading: SyncCell<Style>,
+	pub code:    SyncCell<Style>,
+	pub quote:   SyncCell<Style>,
+	pub list:    SyncCell<Style>,
+	pub link:    SyncCell<Style>,
+	pub rule:    SyncCell<Style>,
+	pub badge:   SyncCell<Style>,
 }
 
 // --- Help
