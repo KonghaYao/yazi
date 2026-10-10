@@ -176,7 +176,9 @@ impl Renderer {
 
 				// A nested item is indented past the marker of the item that contains it
 				self.base = outer_base.clone();
-				self.base.extend(outer_marker.iter().cloned());
+				if !outer_marker.is_empty() {
+					self.base.push(Span::raw(" ".repeat(wrap::width_of(&outer_marker))));
+				}
 				self.marker = vec![Span::styled(marker, style)];
 
 				self.saved.push((outer_base, outer_marker));
@@ -416,8 +418,7 @@ impl Renderer {
 		let mut cont = self.cont();
 		cont.push(Span::raw(" ".repeat(CODE_INDENT)));
 
-		let indent = " ".repeat(CODE_INDENT);
-		let lines = highlight(raw, lang, &self.styles, &indent);
+		let lines = highlight(raw, lang, &self.styles);
 		for spans in lines {
 			self.lines.extend(wrap::wrap(spans, &first, &cont, self.width));
 		}
@@ -569,7 +570,7 @@ fn find_syntax<'a>(set: &'a SyntaxSet, lang: Option<&str>) -> Option<&'a SyntaxR
 	set.find_syntax_by_token(lang).or_else(|| set.find_syntax_by_extension(lang))
 }
 
-fn highlight(raw: &str, lang: Option<&str>, styles: &Styles, indent: &str) -> Vec<Vec<Span<'static>>> {
+fn highlight(raw: &str, lang: Option<&str>, styles: &Styles) -> Vec<Vec<Span<'static>>> {
 	let plain = |raw: &str| {
 		raw.lines().map(|l| vec![Span::styled(l.to_string(), styles.code)]).collect::<Vec<_>>()
 	};
@@ -588,11 +589,10 @@ fn highlight(raw: &str, lang: Option<&str>, styles: &Styles, indent: &str) -> Ve
 			return plain(raw);
 		};
 
-		let mut spans = vec![Span::styled(indent.to_string(), styles.rule)];
-		spans.extend(regions.into_iter().map(|(style, text)| Span {
-			content: text.to_string().into(),
-			style:   convert(style),
-		}));
+		let spans = regions
+			.into_iter()
+			.map(|(style, text)| Span { content: text.to_string().into(), style: convert(style) })
+			.collect();
 		out.push(spans);
 	}
 	out
