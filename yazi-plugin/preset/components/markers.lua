@@ -8,12 +8,9 @@ function Markers:new(chunks, tab)
 	return me
 end
 
-function Markers:build()
-	self._children = {
-		Marker:new(self._chunks[1], self._tab.parent),
-		Marker:new(self._chunks[2], self._tab.current),
-	}
-end
+-- The current pane is a tree, which numbers its rows itself for the files they own, and
+-- so draws the marks of the current folder; the parent pane is the only one left here
+function Markers:build() self._children = { Marker:new(self._chunks[1], self._tab.parent) } end
 
 function Markers:reflow() return {} end
 

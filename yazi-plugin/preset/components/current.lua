@@ -193,10 +193,20 @@ function Current:redraw()
 
 	st.offset = math.max(0, math.min(st.offset, math.max(0, #list - st.height)))
 
-	local left, right, codes = {}, {}, {}
+	local left, right, codes, marks = {}, {}, {}, {}
 	for i = st.offset + 1, math.min(st.offset + st.height, #list) do
 		local row, entity = list[i], Row:new(list[i].file)
 		local prefix = string.rep("  ", row.depth)
+
+		-- The marker sidebar symbol belongs on the row owning the file: only the tree knows
+		-- where each one of them landed
+		local mark = Marker:style(row.file)
+		if mark then
+			marks[#marks + 1] = ui.Bar(ui.Edge.LEFT)
+				:area(ui.Rect { x = self._area.x - 1, y = self._area.y + i - st.offset - 1, w = 1, h = 1 })
+				:symbol(th.mgr.marker_symbol)
+				:style(mark)
+		end
 
 		-- Git: the row keeps the filetype style, with the status color patched in
 		local code = Git.letter(row.file.url, row.file.stat.is_dir)
@@ -236,6 +246,9 @@ function Current:redraw()
 		ui.Text(left):area(self._area),
 		ui.Text(right):area(self._area):align(ui.Align.RIGHT),
 	}
+	for _, mark in ipairs(marks) do
+		elements[#elements + 1] = mark
+	end
 	if #list > st.height then
 		elements[#elements + 1] = bar(self._area, #list, st.offset, st.height)
 	end
