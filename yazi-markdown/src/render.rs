@@ -11,13 +11,8 @@
 use std::sync::LazyLock;
 
 use pulldown_cmark::{Alignment, CodeBlockKind, Event, HeadingLevel, Options, Parser, Tag, TagEnd};
-use ratatui_core::{
-	style::{Color, Modifier, Style},
-	text::{Line, Span, Text},
-};
-use syntect::{
-	dumps, easy::HighlightLines, highlighting, highlighting::{Theme, ThemeSet}, parsing::{SyntaxReference, SyntaxSet},
-};
+use ratatui_core::{style::{Color, Modifier, Style}, text::{Line, Span, Text}};
+use syntect::{dumps, easy::HighlightLines, highlighting, highlighting::{Theme, ThemeSet}, parsing::{SyntaxReference, SyntaxSet}};
 use unicode_width::UnicodeWidthChar;
 use yazi_config::THEME;
 
@@ -145,11 +140,9 @@ impl Renderer {
 				self.flush();
 				self.blank();
 				self.code_lang = match kind {
-					CodeBlockKind::Fenced(info) => info
-						.split_whitespace()
-						.next()
-						.filter(|s| !s.is_empty())
-						.map(str::to_string),
+					CodeBlockKind::Fenced(info) => {
+						info.split_whitespace().next().filter(|s| !s.is_empty()).map(str::to_string)
+					}
 					CodeBlockKind::Indented => None,
 				};
 				self.code = Some(Vec::new());
@@ -205,9 +198,7 @@ impl Renderer {
 			}
 			Tag::Emphasis => self.inline.push(Style::default().add_modifier(Modifier::ITALIC)),
 			Tag::Strong => self.inline.push(Style::default().add_modifier(Modifier::BOLD)),
-			Tag::Strikethrough => {
-				self.inline.push(Style::default().add_modifier(Modifier::CROSSED_OUT))
-			}
+			Tag::Strikethrough => self.inline.push(Style::default().add_modifier(Modifier::CROSSED_OUT)),
 			Tag::Link { dest_url, .. } | Tag::Image { dest_url, .. } => {
 				self.inline.push(self.styles.link);
 				self.link = Some((dest_url.to_string(), self.pending.len()));

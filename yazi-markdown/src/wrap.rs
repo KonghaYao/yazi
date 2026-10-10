@@ -9,10 +9,7 @@
 //! Characters are the break unit, so a wide (CJK) character is never split across two lines,
 //! and a break is preferred at the last space so words are not cut in half.
 
-use ratatui_core::{
-	style::Style,
-	text::{Line, Span},
-};
+use ratatui_core::{style::Style, text::{Line, Span}};
 use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
 /// Display width of a run of spans.

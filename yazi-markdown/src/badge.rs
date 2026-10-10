@@ -20,15 +20,10 @@ pub fn badge_style(mode: Mode) -> Style {
 
 /// The chip sits in the top-right corner of the preview's text area.
 pub fn badge_rect(area: Rect) -> Rect {
-	let width = (badge_label(Mode::Readable).len().max(badge_label(Mode::Code).len()) as u16)
-		.min(area.width);
+	let width =
+		(badge_label(Mode::Readable).len().max(badge_label(Mode::Code).len()) as u16).min(area.width);
 
-	Rect {
-		x:      area.right().saturating_sub(width),
-		y:      area.y,
-		width,
-		height: area.height.min(1),
-	}
+	Rect { x: area.right().saturating_sub(width), y: area.y, width, height: area.height.min(1) }
 }
 
 /// Whether a screen position hits the chip. Checked before text selection, so clicking the

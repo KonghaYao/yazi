@@ -3,10 +3,7 @@
 //! The choice is a user preference, so it lives in the state directory rather than in
 //! `yazi.toml` — switching it never rewrites the user's configuration.
 
-use std::sync::{
-	Once,
-	atomic::{AtomicU8, Ordering},
-};
+use std::sync::{Once, atomic::{AtomicU8, Ordering}};
 
 use yazi_fs::Xdg;
 
@@ -87,7 +84,7 @@ fn save(mode: Mode) -> std::io::Result<()> {
 }
 
 /// Extensions whose preview offers the renderer switch.
-const EXTENSIONS: [&str; 6] = [ "md", "markdown", "mdown", "mkd", "mkdn", "mdx" ];
+const EXTENSIONS: [&str; 6] = ["md", "markdown", "mdown", "mkd", "mkdn", "mdx"];
 
 /// Whether a preview of this file offers the renderer switch. A MIME type is authoritative
 /// when it is known, since `.md` does not always resolve to `text/markdown`.
@@ -95,6 +92,4 @@ pub fn is_markdown(mime: &str, ext: Option<&str>) -> bool {
 	mime == "text/markdown" || ext.is_some_and(is_markdown_ext)
 }
 
-pub fn is_markdown_ext(ext: &str) -> bool {
-	EXTENSIONS.iter().any(|e| ext.eq_ignore_ascii_case(e))
-}
+pub fn is_markdown_ext(ext: &str) -> bool { EXTENSIONS.iter().any(|e| ext.eq_ignore_ascii_case(e)) }
